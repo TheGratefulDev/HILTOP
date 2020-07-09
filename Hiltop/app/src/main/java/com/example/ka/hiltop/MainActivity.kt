@@ -2,8 +2,12 @@ package com.example.ka.hiltop
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -17,31 +21,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         println(someClazz.doSomething())
-        println(someClazz.doSomeOTTHERThings())
     }
 
 }
 
+
+@AndroidEntryPoint
+class MyFragment : Fragment(){
+    @Inject
+    lateinit var someClazz: SomeClazz
+
+}
+
+@ActivityScoped //This will not crash
+// @FragmentScoped this will crash
 class SomeClazz
 @Inject
-constructor(
-        //Constructor Injection
-        private val someOtherClazz: SomeOtherClazz
-){
+constructor(){
 
     fun doSomething(): String{
         return "Look I did a thing!"
     }
-
-    fun doSomeOTTHERThings():String{
-        return someOtherClazz.doSomeOtherThing()
-    }
 }
 
-class SomeOtherClazz
-@Inject
-constructor(){
-    fun doSomeOtherThing(): String{
-        return "I do other things!"
-    }
-}
